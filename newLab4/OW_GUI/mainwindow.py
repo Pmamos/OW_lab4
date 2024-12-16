@@ -13,7 +13,7 @@ from matplotlib import cm
 from matplotlib.colors import Normalize
 
 from newLab4.OW_GUI.ui_form import Ui_MainWindow
-from newLab4.RSM.RSM_new import rsm_discrete, rsm_continuous
+from newLab4.RSM.RSM import rsm_discrete, rsm_continuous
 from newLab4.TOPSIS.FUZZY_TOPSIS import fuzzy_topsis
 from newLab4.UTA_BIS.UTA_DIS import UTA_DIS
 
@@ -92,7 +92,8 @@ class MainWindow(QMainWindow):
             pass
 
         if title == "FUZZY TOPSIS":
-            middle_points = [[(l[1]) for l in alt] for alt in data]
+
+            middle_points = [[(l) for l in alt] for alt in data]
 
             sorted_indices = np.argsort(list(utilities.values()))[::-1]
 
@@ -305,17 +306,19 @@ class MainWindow(QMainWindow):
 
                 bounds_continuous_4d = [bounds]*4
 
-                lower_bound = max(0, bounds[0] - 2)
-                upper_bound = min(10, bounds[1] + 2)
 
-                A_4d_cont = [
-                    [random.randint(lower_bound, upper_bound) for _ in range(4)] for _ in range(5)
-                ]  # Punkty odniesienia (4D)
+
+                reference_points = []
+                for _ in range(sample_num*5):
+                    point = [
+                        np.random.uniform(max(0, bounds[0] - 2), min(10, bounds[1] + 2))
+                    ]
+                    reference_points.append(point)
 
                 results = rsm_continuous(
                     num_samples=sample_num,
                     bounds=bounds_continuous_4d,
-                    reference_points=np.array(A_4d_cont),
+                    reference_points=np.array(reference_points).T,
                     min_max=criteria
                 )
 
