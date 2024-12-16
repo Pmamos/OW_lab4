@@ -2,7 +2,6 @@ from typing import List, Tuple, Union
 import numpy as np
 from math import sqrt
 import matplotlib
-from numpy._typing import NDArray
 from scipy.spatial.distance import euclidean
 matplotlib.use("TkAgg")
 
@@ -66,8 +65,8 @@ def find_pareto_front(
 
 
 def rsm_discrete(
-    reference_points: NDArray[float],
-    decision_points: NDArray[float],
+    reference_points,
+    decision_points,
     min_max: List[bool],
 ) -> List[Tuple[List, float, int]]:
     """
@@ -100,7 +99,7 @@ def rsm_discrete(
 
 def rsm_continuous(
     num_samples: int,
-    reference_points: NDArray[float],
+    reference_points,
     min_max: List[bool],
     bounds: Union[List[Tuple[float, float]], float] = 0,
 ) -> List[Tuple[List, float, int]]:

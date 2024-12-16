@@ -15,7 +15,7 @@ from matplotlib.colors import Normalize
 from newLab4.OW_GUI.ui_form import Ui_MainWindow
 from newLab4.RSM.RSM import rsm_discrete, rsm_continuous
 from newLab4.TOPSIS.FUZZY_TOPSIS import fuzzy_topsis
-from newLab4.UTA_BIS.UTA_DIS import UTA_DIS
+from newLab4.UTA_DIS.UTA_DIS import uta_dis_algorithm
 
 
 class MainWindow(QMainWindow):
@@ -379,7 +379,7 @@ class MainWindow(QMainWindow):
             A = np.array(A)
 
 
-            # Maksymalizacja dla 1. i 3. kryterium, minimalizacja dla 2.
+
             if self.ui.opti_type.currentText() == "Minimalizacja":
                 minmax = [False] * len(A[0])
             else:
@@ -393,7 +393,13 @@ class MainWindow(QMainWindow):
 
             # Klasyfikacja alternatyw do kategorii
             if variant == "discrete":
-                categories, total_utilities, _ = UTA_DIS(A, minmax, weights, thresholds, continuous=False)
+                categories, total_utilities, _ = uta_dis_algorithm(
+                    A,
+                    optimization_directions=minmax,
+                    criteria_weights=weights,
+                    thresholds=thresholds,
+                    is_continuous=False
+                )
                 ranking = dict()
                 for num, x in enumerate(total_utilities):
                     ranking[num] = float(x)
@@ -412,7 +418,15 @@ class MainWindow(QMainWindow):
                 else:
                     minmax = [True] * 4
                 thresholds = [0.3, 0.5, 0.7, 1.0]
-                categories, total_utilities, A = UTA_DIS(A, minmax, weights, thresholds, continuous=True, bounds=[bounds]*4, num_samples=sample_num)
+                categories, total_utilities, A = uta_dis_algorithm(
+                    A,
+                    optimization_directions=minmax,
+                    criteria_weights=weights,
+                    thresholds=thresholds,
+                    is_continuous=True,
+                    criteria_bounds=[bounds] * 4,
+                    sample_count=sample_num
+                )
                 ranking = dict()
                 for num, x in enumerate(total_utilities):
                     ranking[num] = float(x)
